@@ -5,26 +5,20 @@ wl = 7;                                  % wanted lambdas
 sd = 10;                                 % smallest dim of subspace
 ld = 30;                                 % largest dim of subspace
 
-G = rand(da,800);                     % give initial
-% A = G*G';
-% [~, De] = eig(A);                     
-% [De, ~] = sort(abs(diag(De)), 'descend');  % for checking
+G = rand(da,800);                        % give initial
 
 Vl = zeros(da,wl);
 Dl = zeros(2,wl);
-U1 = randn(da,1);
-U = [U1/norm(U1) zeros(da,ld)];          % U(:,31)
-T = zeros(ld+1);                           % T(31,31) = beta31
-% v = zeros(da,1);                         % u0 = U(:,0)
-% beta0 = 0;
-cl = 0;                                  % current conv lambda
+U = [randn(da,1) zeros(da,ld)];
+U(:,1) = U(:,1)/norm(U(:,1));           % U(:,31)
+T = zeros(ld+1);                        % T(31,30) = T(30,31) = beta31
+cl = 0;                                 % current conv lambda
 restart = 0;
-% cd = 0;                                % current dim of subspace
+% cd = 0;                               % current dim of subspace
 
 U(:,2) = G*(G'*U(:,1));
 T(1,1) = U(:,1)'*U(:,2);
 U(:,2) = U(:,2) - T(1,1)*U(:,1);
-% v = U(:,2) - T(1,1)*U(:,1) - beta0*v;
 T(2,1) = norm(U(:,2));
 T(1,2) = T(2,1);
 U(:,2) = U(:,2)/T(2,1);
@@ -38,10 +32,10 @@ while cl < wl+1
         T(j,j) = U(:,j)'*U(:,j+1);
         U(:,j+1) = U(:,j+1) - T(j,j)*U(:,j) ;
         for k = 1: j
-            gamma = U(:,k)'*U(:,j+1);
-            U(:,j+1) = U(:,j+1) - gamma*U(:,k);
+            T(1,ld+1) = U(:,k)'*U(:,j+1);            % store in T(1,ld+1), which is not important
+            U(:,j+1) = U(:,j+1) - T(1,ld+1)*U(:,k);
         end
-        T(j,j) = T(j,j) + gamma;
+        T(j,j) = T(j,j) + T(1,ld+1);
         T(j+1,j) = norm(U(:,j+1));                   % positive number
         T(j,j+1) = T(j+1,j);
         U(:,j+1) = U(:,j+1)/T(j+1,j);
