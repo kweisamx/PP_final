@@ -59,19 +59,14 @@ int main(){
     }
     // add all row and make average
     for(int p = 0;p<r;p++){
-        for(int q=0;q<c;q++){
+        for(int q=0;q<c;q++)
             sum_array[p] += arr[p][q];
-        }
         //printf("sum_array=%lf\n",sum_array[p]/c);
         sum_array[p] = sum_array[p]/c;
-    }
-    
-    // all row mine average
-    for(int p = 0;p<r;p++){
-        for(int q=0;q<c;q++){
+        // all row mine average
+        for(int q=0;q<c;q++)
             arr[p][q] = arr[p][q] - sum_array[p];
-            //printf("%lf\n",arr[p][q]);
-        }
+
     }
     FILE *fp;
     fp=fopen("B.csv","w+");
